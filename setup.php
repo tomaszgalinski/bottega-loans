@@ -12,11 +12,11 @@ require_once __DIR__ . '/vendor/autoload.php';
 $config = new Configuration();
 
 $connectionParams = [
-    'dbname' => 'workshop_5',
+    'dbname' => 'getresponse_loans',
     'user' => 'root',
-    'password' => 'password',
-    'host' => '54.77.15.1',
-    'port' => 3306,
+    'password' => 'root',
+    'host' => '127.0.0.1',
+    'port' => 32768,
     'driver' => 'pdo_mysql',
 ];
 
@@ -36,19 +36,30 @@ try {
     $stmt->execute();
 } catch (\Exception $e) { }
 
+// Setup event busa
 $eventBus = new \Prooph\ServiceBus\EventBus();
 $eventRouter = new \Prooph\ServiceBus\Plugin\Router\EventRouter();
 $eventPublisher = new \Prooph\EventStoreBusBridge\EventPublisher($eventBus);
 
-// Setup repozytorium agregatów
+$eventRouter->attachToMessageBus($eventBus);
 
+// Setup command busa
+$commandBus = new \Prooph\ServiceBus\CommandBus();
+$commandRouter = new \Prooph\ServiceBus\Plugin\Router\CommandRouter();
+
+$commandRouter->attachToMessageBus($commandBus);
+
+// Setup repozytorium agregatów
 $eventStore = new MySqlEventStore(
     new \Prooph\Common\Messaging\FQCNMessageFactory(),
     $connection->getWrappedConnection(),
     new \Prooph\EventStore\Pdo\PersistenceStrategy\MySqlSingleStreamStrategy()
 );
-//$eventStore = new
 
+$eventStore = new \Prooph\EventStore\ActionEventEmitterEventStore(
+    $eventStore,
+    new \Prooph\Common\Event\ProophActionEventEmitter()
+);
 $eventPublisher->attachToEventStore($eventStore);
 
 $streamName = new \Prooph\EventStore\StreamName('event_stream');

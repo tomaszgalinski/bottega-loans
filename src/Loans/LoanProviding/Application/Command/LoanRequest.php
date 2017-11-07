@@ -16,15 +16,21 @@ class LoanRequest extends Command
     /**
      * LoanRequest constructor.
      */
-    public function __construct(UuidInterface $customerId, Money $money, \DateTimeImmutable $dateTo)
+    public function __construct(UuidInterface $loanId, UuidInterface $customerId, Money $money, \DateTimeImmutable $dateTo)
     {
         $this->init();
         $this->setPayload([
+            'loan_id' => (string)$loanId,
             'customer_id' => (string)$customerId,
             'amount' => $money->getAmount(),
             'currency' => $money->getCurrency()->getCode(),
             'date_to' => $dateTo
         ]);
+    }
+
+    public function loanId(): UuidInterface
+    {
+        return Uuid::fromString($this->payload['loan_id']);
     }
 
     public function customerId(): UuidInterface

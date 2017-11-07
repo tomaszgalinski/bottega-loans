@@ -72,20 +72,18 @@ class Loan extends AggregateRoot
         // case nadplaty?
         // exception, saga...
 
-        if ($money->lessThanOrEqual($this->remainingAmount)) {
+        if ($money->lessThan($this->remainingAmount)) {
             $this->recordThat(
                 LoanPaidOff::create($this->id, $money)
             );
         } elseif ($money->equals($this->remainingAmount)) {
             $this->recordThat(
-                LoanPaidOff::create($this->id, $this->remainingAmount)
+                LoanFullyPaid::create($this->id, $this->remainingAmount)
             );
         } else {
             $this->recordThat(
                 LoanOverPaid::create($this->id, $money->subtract($this->remainingAmount))
             );
-
-
         }
     }
 
@@ -94,7 +92,6 @@ class Loan extends AggregateRoot
         if (!$this->canBeCancelled()) {
             throw new \LogicException();
         }
-
 
         $this->recordThat(
             LoanCancelled::create($this->id, $reason)

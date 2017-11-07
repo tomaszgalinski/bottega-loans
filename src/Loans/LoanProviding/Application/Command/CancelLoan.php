@@ -31,7 +31,7 @@ class CancelLoan extends Command
         return Uuid::fromString($this->payload['loan_id']);
     }
 
-    public function reason(): string
+    public function reason()Load
     {
         return $this->payload['reason'];
     }

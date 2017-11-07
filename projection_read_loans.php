@@ -6,9 +6,9 @@ use Loans\LoanProviding\Domain\LoanStatus;
 
 require_once 'setup.php';
 
- $projection = $projectionManager->createProjection('read_loans');
+$projection = $projectionManager->createProjection('read_loans');
 
- $projection
+$projection
      ->fromAll()
      ->whenAny(function($state, $event) use ($connection) {
          switch (get_class($event)) {
@@ -55,4 +55,4 @@ require_once 'setup.php';
                  break;
          }
      })
-     ->run(false);
+     ->run(true);
