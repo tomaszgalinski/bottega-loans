@@ -65,6 +65,13 @@ class Loan extends AggregateRoot
 
     public function payoff(Money $money)
     {
+//        if (!$this->canUseService($money)) {
+//
+//        }
+//        return $this->balance->greaterThan($money); // Prepaid
+//        return true; // Postpaid
+//        return przez_miesiac_mozesz_naparzac; // Time
+
         if ($this->status != LoanStatus::ACTIVE()) {
             throw new \LogicException();
         }
