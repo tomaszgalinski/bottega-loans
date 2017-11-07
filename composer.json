@@ -1,0 +1,18 @@
+{
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    },
+    "require": {
+        "moneyphp/money": "^3.0",
+        "myclabs/php-enum": "^1.5",
+        "prooph/event-store": "^7.2",
+        "prooph/service-bus": "^6.1",
+        "prooph/event-sourcing": "^5.2",
+        "prooph/pdo-event-store": "^1.5",
+        "doctrine/dbal": "^2.6",
+        "prooph/event-store-bus-bridge": "^3.0",
+        "ramsey/uuid": "^3.7"
+    }
+}
